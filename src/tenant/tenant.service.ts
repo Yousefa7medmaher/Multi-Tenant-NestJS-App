@@ -38,6 +38,6 @@ export class TenantService {
   }
 
   async findAll(): Promise<Tenant[]> {
-    return this.tenantRepo.find({ relations: ['admin'] });
+    return this.tenantRepo.find();
   }
 }

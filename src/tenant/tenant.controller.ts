@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
+import { OmitType } from '@nestjs/mapped-types';
 
 @Controller('tenants')
 export class TenantController {

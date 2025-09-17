@@ -1,5 +1,5 @@
 // src/admin/admin.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException  ,BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user-public.entity';
@@ -14,24 +14,34 @@ export class UserPublicService {
     private readonly tenantRepo: Repository<Tenant>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, password, tenantId } = createUserDto;
+async create(createUserDto: CreateUserDto): Promise<User> {
+  const { name, email, password, tenantId } = createUserDto;
 
-    const tenant = await this.tenantRepo.findOne({ where: { id: tenantId } });
-    if (!tenant) throw new NotFoundException('Tenant not found');
+  const tenant = await this.tenantRepo.findOne({ where: { id: tenantId } });
+  if (!tenant) throw new NotFoundException('Tenant not found');
 
-    const admin = this.adminRepo.create({
-      name,
-      email,
-      password,
-      tenant,  
-    });
+  const existingUser = await this.adminRepo.findOne({
+    where: { email },
+    relations: ['tenant'],
+  });
 
-    return this.adminRepo.save(admin);
+  if (existingUser && existingUser.tenant) {
+    throw new BadRequestException('User is already assigned to a tenant');
   }
 
+  const admin = this.adminRepo.create({
+    name,
+    email,
+    password,
+    tenant,
+  });
+
+  return this.adminRepo.save(admin);
+}
+
+
   async findAll(): Promise<User[]> {
-    return this.adminRepo.find();
+    return this.adminRepo.find({relations:['tenant']});
   }
 
   async findOne(id: number): Promise<User> {
