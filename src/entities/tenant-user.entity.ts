@@ -16,5 +16,5 @@ export class TenantUser {
   password: string;
 
   @Column({ default: 'user' })
-  role: string; 
+  role: UserRole; 
 }

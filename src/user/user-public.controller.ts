@@ -10,7 +10,7 @@ export class AdminController {
   @Post()
   create(@Body() createAdminDto: CreateUserDto) {
     return this.userService.create(createAdminDto);
-  }
+  }ل
 
   @Get()
   findAll() {
