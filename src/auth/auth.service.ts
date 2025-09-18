@@ -69,7 +69,7 @@ export class AuthService {
         name,
         email,
         password: hashedPassword,
-        role: role || 'user',
+        role: role ,
       });
 
       await tenantUserRepo.save(newUser);

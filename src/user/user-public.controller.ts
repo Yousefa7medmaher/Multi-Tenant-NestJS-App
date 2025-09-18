@@ -1,4 +1,3 @@
-// src/admin/admin.controller.ts
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { UserPublicService } from './user-public.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,7 +10,7 @@ export class AdminController {
   create(@Body() createAdminDto: CreateUserDto) {
     return this.userService.create(createAdminDto);
   }
-
+  
   @Get()
   findAll() {
     return this.userService.findAll();
